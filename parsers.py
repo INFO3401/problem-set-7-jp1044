@@ -156,8 +156,9 @@ def create_database(databaseName):
     c = conn.cursor()
 
     #Ask the connection to execute a SQL statement
-    c.execute('''CREATE TABLE word_counts(filename TEXT, word TEXT, count INTEGER)''')
-    c.execute('''CREATE TABLE presidents_information(id INTEGER PRIMARY KEY, order INTEGER, start INTEGER, end INTEGER, president_name TEXT, prior_occupation TEXT, party TEXT, vice_president TEXT)''')
+    #Can't get the second query to run. Keep getting a "sqlite3.OperationalError: near "order": syntax error" error
+    c.execute("CREATE TABLE word_counts(filename TEXT, word TEXT, count INTEGER)")
+    c.execute("CREATE TABLE presidents_information(id INTEGER PRIMARY KEY, order INTEGER, start INTEGER, end INTEGER, president_name TEXT, prior_occupation TEXT, party TEXT, vice_president TEXT)")
     conn.commit()
     conn.close()
 
