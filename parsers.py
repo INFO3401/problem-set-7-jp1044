@@ -29,7 +29,7 @@ def countWordsUnstructured(filename):
     file.close()
     return words
 # Test your part 1 code below.
-word_dict = countWordsUnstructured("state-of-the-union-corpus-1989-2017/Bush_1989.txt")
+#word_dict = countWordsUnstructured("state-of-the-union-corpus-1989-2017/Bush_1989.txt")
 ################################################################################
 # PART 2
 ################################################################################
@@ -48,7 +48,7 @@ def generateSimpleCSV(targetfile, wordCounts):
     return
 
     # Test your part 2 code below
-generateSimpleCSV("test_file.csv",word_dict)
+#generateSimpleCSV("test_file.csv",word_dict)
 ################################################################################
 # PART 3
 ################################################################################
@@ -67,7 +67,7 @@ def countWordsMany(directory):
     return wordCountDict
 
 # Test your part 3 code below
-manyWordsDict = countWordsMany("./state-of-the-union-corpus-1989-2017")
+#manyWordsDict = countWordsMany("./state-of-the-union-corpus-1989-2017")
 #print(manyWordsDict)
 ################################################################################
 # PART 4
@@ -86,7 +86,6 @@ def generateDirectoryCSV(wordCounts, targetfile):
     outfile.close()
     return 0
 # Test your part 4 code below
-generateDirectoryCSV(manyWordsDict, "test_csv_2.csv")
 ################################################################################
 # PART 5
 ################################################################################
@@ -102,7 +101,7 @@ def generateJSONFile(wordCounts, targetfile):
 
 # Test your part 5 code below
     return 0
-generateJSONFile(manyWordsDict, "test_json.json")
+#generateJSONFile(manyWordsDict, "test_json.json")
 ################################################################################
 # PART 6
 ################################################################################
@@ -145,8 +144,8 @@ def searchJSON(JSONfile, word):
     return largest_count_file
 
 # Test your part 6 code to find which file has the highest count of a given word
-print(searchCSV("test_csv_2.csv", "the"))
-print(searchJSON("test_json.json", "the"))
+#print(searchCSV("test_csv_2.csv", "the"))
+#print(searchJSON("test_json.json", "the"))
 
 # +1 bonus point for figuring out how many datapoints you had to process to
 # compute this value
@@ -157,10 +156,10 @@ def create_database(databaseName):
     c = conn.cursor()
 
     #Ask the connection to execute a SQL statement
-    c.execute('''CREATE TABLE word_counts (filename text, word text, count real)''')
-    c.execute('''CREATE TABLE presidents_information (real index,real number,real start,real end,text president_name,text prior_occupation,text party, text vice_president)''')
-    c.commit()
-    c.close()
+    c.execute('''CREATE TABLE word_counts(filename TEXT, word TEXT, count INTEGER)''')
+    c.execute('''CREATE TABLE presidents_information(id INTEGER PRIMARY KEY, order INTEGER, start INTEGER, end INTEGER, president_name TEXT, prior_occupation TEXT, party TEXT, vice_president TEXT)''')
+    conn.commit()
+    conn.close()
 
 
-create_database('presidents.db')
+#create_database('presidents.db')

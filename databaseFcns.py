@@ -35,12 +35,18 @@ def populateDatabase(databaseName, wordCounts, metaData):
             c.execute('''INSERT INTO word_counts (filename,word,count) values ({0},{1},{2})'''.format(file,word,file[word]))
     c.execute('''SELECT word FROM word_counts''')
     print(c.fetchall())
+    with open("us_presidents.csv") as presidents_csv:
+        data = csv.reader(presidents.csv)
+        for row in data[1:]:
+                c.execute('''INSERT INTO presidents_information (index,order,start,end,president_name,prior_occupation,party, vice_president) values ({0},{1},{2},{3},{4},{5},{6},{7})'''.format(row[0], row[1], row[2], row[3], row[4],row[5], row[6], row[7]))
+
+
 
 
     return 0
 
 # Test your code here
-
+populateDatabase("presidents.db", parsers.countWordsMany("./state-of-the-union-corpus-1989-2017"), "us_presidents.csv")
 ####################################################
 # Part 2
 ####################################################
