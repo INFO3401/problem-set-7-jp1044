@@ -1,5 +1,7 @@
 # Place any necessary imports here
 import sqlite3
+import csv
+import pandas as pd
 
 ####################################################
 # Part 0
@@ -31,21 +33,25 @@ def populateDatabase(databaseName, wordCounts, metaData):
     c = conn.cursor()
     for file in wordCounts:
         for word in wordCounts[file]:
-            print(word)
-            c.execute('''INSERT INTO word_counts (filename,word,count) values (:file,:word,:count)''',{'file' : file,'word': word,'count': wordCounts[file][word]})
-    c.execute('''SELECT word FROM word_counts''')
-    print(c.fetchall())
-    with open("us_presidents.csv") as presidents_csv:
-        data = csv.reader(presidents.csv)
-        for row in data[1:]:
-                c.execute('''INSERT INTO presidents_information (index,order,start,end,president_name,prior_occupation,party, vice_president) values ({0},{1},{2},{3},{4},{5},{6},{7})'''.format(row[0], row[1], row[2], row[3], row[4],row[5], row[6], row[7]))
-
+            c.execute('''INSERT INTO Word_counts (filename,president,year,word,count) values (:file,:president,:year,:word,:count)''',{'file' : file,'president':file.split('_')[0],'year':file.split('_')[1].split('.')[0],'word': word,'count': wordCounts[file][word]})
+    with open("us_presidents.csv", encoding = "latin1") as presidents_csv:
+        data = csv.reader(presidents_csv)
+        for idx, row in enumerate(data):
+            if idx != 0:
+                firstName = row[4].split(" ")[0]
+                lastName = row[4].split(" ")[-1]
+                c.execute('''INSERT INTO Presidents_information (id,test,start,end,president_firstname,president_lastname,prior_occupation,party, vice_president) values (?,?,?,?,?,?,?,?,?)''',(row[0],row[1],row[2],row[3],firstName,lastName,row[5],row[6],row[7]))
+    c.execute("SELECT * FROM Word_counts")
+    print(c.fetchone())
+    c.execute("SELECT * FROM Presidents_information")
+    print(c.fetchone())
+    conn.close()
     return 0
 
 # Test your code here
 # Cannot create the database because of errors
-parsers.create_database("presidents.db")
-populateDatabase("presidents.db", parsers.countWordsMany("./state-of-the-union-corpus-1989-2017"), "us_presidents.csv")
+parsers.create_database("presidents-2.db")
+populateDatabase("presidents-2.db", parsers.countWordsMany("./state-of-the-union-corpus-1989-2017"), "us_presidents.csv")
 ####################################################
 # Part 2
 ####################################################
@@ -56,8 +62,14 @@ def searchDatabase(databaseName, word):
     # Inputs: A database file to search and a word to search for
     # Outputs: The name of the president whose speech contained
     #          the highest count of the target word
-    return 0
-
+    conn = sqlite3.connect(databaseName)
+    c = conn.cursor()
+    #Returns None, but Syntax
+    c.execute('''SELECT MAX(count) FROM Word_counts WHERE word = :word''', {'word' : word})
+    word = c.fetchone()
+    conn.close()
+    return word
+print(searchDatabase("presidents-2.db", "the"))
 def computeLengthByParty(databaseName):
     # Write a function that will query the database to find the
     # average length (number of words) of a speech by presidents
@@ -65,4 +77,9 @@ def computeLengthByParty(databaseName):
     # Inputs: A database file to search and a word to search for
     # Outputs: The average speech length for presidents of each
     #          of the two major political parties.
+    conn = sqlite3.connect(databaseName)
+    c = conn.cursor()
+    #Started to join on president name and year, but presidents names need to be separated out, which I was having trouble
+    #getting to work
+    #pd.read_sql('''SELECT Presidents_information.party, Word_counts.year, Word_counts.word, Word_counts.count FROM Word_counts FULL OUTER JOIN Presidents_information ON Word_counts.year=''')
     return 0
